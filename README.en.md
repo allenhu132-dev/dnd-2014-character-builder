@@ -14,6 +14,8 @@ Use **Settings → Language** to switch between English and Simplified Chinese. 
 2. Click an option to preview it, then choose **Select This Option** to apply it. Use **Compare Subclasses** to view two subclasses side by side, with features aligned by level.
 3. Open **Leveling** to preview future levels and see what choices unlock. Select **Set as Actual Level** when you're ready to apply the level.
 
+Open **Starter Guide** on the home page for an eight-step walkthrough. Try the fighter example, jump straight to each editor, and learn how to check, back up, or share a finished character. The guide works offline.
+
 ## Use it offline
 
 Open **Settings** and select **Download Offline Tool**. Save `DND-2014-Character-Builder.html` and open it in your browser. You can send that HTML file directly to friends.
