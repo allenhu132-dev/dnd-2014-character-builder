@@ -4,7 +4,9 @@
 
 用 D&D 第五版 2014 规则创建角色、比较子职和规划 1–20 级成长。打开后会载入一张可编辑的 1 级人类战士示例卡，也可以从空白开始。建卡无需注册或登录。
 
-**[打开建卡台](https://allenhu132-dev.github.io/dnd-2014-character-builder/)**
+**[打开建卡台](https://allenhu132-dev.github.io/dnd-2014-character-builder/)** · [Open in English](https://allenhu132-dev.github.io/dnd-2014-character-builder/?lang=en)
+
+在「设置」→「界面语言」切换简体中文和 English。两种语言共用同一份角色库，离线版也支持切换。
 
 ## 第一次建卡
 
@@ -14,14 +16,14 @@
 
 ## 离线使用
 
-在网页里选「角色管理」→「下载离线工具」，将下载的 `DND-2014-Character-Builder.html` 保存到本地，再用浏览器打开。可以把这个 HTML 直接发给同学。
+在网页里选「设置」→「下载离线工具」，将下载的 `DND-2014-Character-Builder.html` 保存到本地，再用浏览器打开。可以把这个 HTML 直接发给同学。
 
 如果网页打不开，可以从仓库下载 [离线文件原文](https://raw.githubusercontent.com/allenhu132-dev/dnd-2014-character-builder/main/DND-2014-Character-Builder.txt)，保存后把扩展名从 `.txt` 改成 `.html`，再用浏览器打开。
 
 ## 保存和分享角色
 
 - 角色自动保存在当前浏览器。在线版和离线版各自保存角色。
-- 换设备或从网页切到离线版时，用「角色管理」导出 JSON，再在另一端导入。完整存档可能含有私人补记。
+- 换设备或从网页切到离线版时，用「设置」导出 JSON，再在另一端导入。完整存档可能含有私人补记。
 - 发角色给团友时，可以先用「分享角色」预览公开摘要。默认隐藏种族和私人补记。
 
 ## 规则范围
