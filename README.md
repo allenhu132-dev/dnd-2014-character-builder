@@ -1,5 +1,7 @@
 # D&D 2014 中文建卡工作台
 
+[English](README.en.md)
+
 用 D&D 第五版 2014 规则创建角色、比较子职和规划 1–20 级成长。打开后会载入一张可编辑的 1 级人类战士示例卡，也可以从空白开始。建卡无需注册或登录。
 
 **[打开建卡台](https://allenhu132-dev.github.io/dnd-2014-character-builder/)**
