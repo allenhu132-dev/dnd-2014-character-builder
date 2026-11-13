@@ -14,7 +14,7 @@ Use **Settings → Language** to switch between English and Simplified Chinese. 
 2. Click an option to preview it, then choose **Select This Option** to apply it. Use **Compare Subclasses** to view two subclasses side by side, with features aligned by level.
 3. Open **Leveling** to preview future levels and see what choices unlock. Select **Set as Actual Level** when you're ready to apply the level.
 
-From the home page, open **Starter Guide → Start Hands-on Practice**. Follow the highlights on a temporary fighter and complete each action to advance. Exit at any time to return to your own character. You can also read the guide by topic. Both modes work offline.
+From the home page, choose **Starter Guide → Start Page Guide**. Follow the highlights to find the controls in each editor, and move through the guide at your own pace. The guide works offline.
 
 ## Use it offline
 
