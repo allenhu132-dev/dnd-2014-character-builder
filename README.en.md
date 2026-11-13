@@ -30,4 +30,4 @@ If the site is unavailable, download the [offline file from GitHub](https://raw.
 
 The builder supports single-class progression for all 12 classes in the 2014 *Player’s Handbook* and includes options from selected 5e supplements. Open an option’s full rules to see its requirements and limits. Some supplemental effects require manual entry or a ruling from your DM.
 
-English rule descriptions include machine-translated summaries, especially for supplemental options. Consult the linked rule source if a detail is unclear.
+English spell summaries and core class and subclass features use 2014 D&D terminology. Some supplemental rule details still use machine-assisted translations. See the [2014 Basic Rules](https://www.dndbeyond.com/sources/dnd/basic-rules-2014) and the sources listed on individual rule cards.
