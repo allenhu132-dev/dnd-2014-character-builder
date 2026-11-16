@@ -9908,42 +9908,48 @@ const CharacterLocale = (() => {
         `<tr><th>${level} 级</th>${records.map(record => `<td>${esc(record.features?.find(row => +row[0] === level)?.[1]?.join(' · ') ?? '—')}</td>`).join('')}</tr>`).join('')}</tbody></table></section>`;
   }
 
-  function missingEquipmentBranch() {
-    if (state.equipmentMode !== 'pack') return '';
-    for (const group of coreRules.classes[state.job]?.equipment ?? []) {
-      const option = group.options.find(item => item.id === state.equipmentChoices[group.id]);
+  function missingEquipmentBranch(build = state) {
+    if (build.equipmentMode !== 'pack') return '';
+    for (const group of coreRules.classes[build.job]?.equipment ?? []) {
+      const option = group.options.find(item => item.id === build.equipmentChoices[group.id]);
       if (!option) return 'equipmentChoices.' + group.id;
       if (!option.pick) continue;
       const pool = equipmentPickPool(option.pick);
       for (let i = 0; i < option.pick.count; i++) {
         const decision = 'gear:' + group.id + ':' + i;
-        if (!pool.some(item => item.id === state.decisions[decision]?.[0])) return 'decision.' + decision;
+        if (!pool.some(item => item.id === build.decisions[decision]?.[0])) return 'decision.' + decision;
       }
     }
     return '';
   }
 
-  function buildTasks(calc) {
-    const cls = classSpec(state);
-    const needsSubclass = state.level >= activeTrack(state).sub[0] && !calc.subclass;
-    const needsJobSkills = state.jobSkills.filter(skill => cls[4].includes(skill) && calc.proficiencies.has(skill)).length < cls[3] ||
+  function checklistBuild() {
+    return state.level === state.actualLevel ? state : {...state, level: state.actualLevel};
+  }
+
+  function buildTasks(build, calc) {
+    const cls = classSpec(build);
+    const needsSubclass = build.level >= activeTrack(build).sub[0] && !calc.subclass;
+    const needsJobSkills = build.jobSkills.filter(skill => cls[4].includes(skill) && calc.proficiencies.has(skill)).length < cls[3] ||
       calc.issues.includes('职业技能未选满');
     const backgroundIssue = calc.issues.some(issue => /背景|专精缺少|待选两项不同|熟练来源重复/.test(issue));
-    const equipmentIncomplete = Boolean(missingEquipmentBranch()) || (state.equipmentMode === 'gold' && !state.wealthRoll) ||
+    const equipmentIncomplete = Boolean(missingEquipmentBranch(build)) || (build.equipmentMode === 'gold' && !build.wealthRoll) ||
       calc.core.equipment.unlisted.length || calc.core.equipment.handConflict || calc.issues.some(issue => /护甲|盾牌|金币|起始财富/.test(issue));
     return [
-      {id: 'ancestry', name: '种族与语言', done: !state.pendingIdentity.includes('ancestry') && !calc.issues.some(issue => /种族|语言重复|变体人类/.test(issue))},
-      {id: 'job', name: '职业与子职', done: !state.pendingIdentity.includes('job') && !needsSubclass && !needsJobSkills},
-      {id: 'scores', name: '属性与购点', done: state.scoreMode === 'manual' || spent(state.base) === 27},
-      {id: 'background', name: '背景与熟练', done: !state.pendingIdentity.includes('background') && !backgroundIssue},
+      {id: 'ancestry', name: '种族与语言', done: !build.pendingIdentity.includes('ancestry') && !calc.issues.some(issue => /种族|语言重复|变体人类/.test(issue))},
+      {id: 'job', name: '职业与子职', done: !build.pendingIdentity.includes('job') && !needsSubclass && !needsJobSkills},
+      {id: 'scores', name: '属性与购点', done: build.scoreMode === 'manual' || spent(build.base) === 27},
+      {id: 'background', name: '背景与熟练', done: !build.pendingIdentity.includes('background') && !backgroundIssue},
       {id: 'armor', name: '装备与金币', done: !equipmentIncomplete},
       {id: 'spells', name: '法术选择', done: !calc.core.spells.issues.length},
       {id: 'treeLevel', name: '升级选择', done: !calc.issues.some(issue => !calc.core.spells.issues.includes(issue) && /^\d+\s*级/.test(issue))},
     ];
   }
 
-  function renderGuide(calc, opened) {
-    const tasks = buildTasks(calc);
+  function renderGuide(preview, opened) {
+    const build = checklistBuild();
+    const calc = build === state ? preview : calculate(build);
+    const tasks = buildTasks(build, calc);
     const issues = [...new Set(calc.issues)];
     const pending = tasks.filter(task => !task.done);
     const [next, ...remaining] = pending;
@@ -9952,6 +9958,7 @@ const CharacterLocale = (() => {
     return `<section class="guide-panel" aria-label="建卡待办">
       <section class="guide-checklist" aria-labelledby="checklist-title">
         <h3 id="checklist-title">建卡检查</h3>
+        ${build !== state ? `<p class="hint">实际 ${build.level} 级</p>` : ''}
         ${!pending.length && !issues.length ? '<p>已完成</p>' : ''}
         ${next ? `<button type="button" class="primary" data-task="${next.id}">下一步 · ${next.name}</button>` : ''}
         ${more ? details('checklist', '查看全部待办', more, opened) : ''}
@@ -10781,47 +10788,53 @@ const CharacterLocale = (() => {
       </dl></details></section>`;
   }
 
-  function openBuildTask(task) {
-    const calc = calculate();
-    if (state.pendingIdentity.includes(task)) return openTask(task);
-    if (task === 'scores' || task === 'spells') return openTask(task);
+  function openChecklistEditor(task, key, target = '#task-title', level = state.actualLevel) {
+    if (level !== state.level) return setLevel(level, true, {task, key: key ?? taskDefaultBranches[task] ?? '', target});
+    return openTask(task, key, target);
+  }
+
+  function openBuildTask(task, build = checklistBuild(), calc = calculate(build)) {
+    const openBranch = (key = task) => openChecklistEditor(task, key, key ? '#branch-panel' : '#task-title');
+    if (build.pendingIdentity.includes(task)) return openChecklistEditor(task);
+    if (task === 'scores' || task === 'spells') return openChecklistEditor(task);
     if (task === 'treeLevel') {
       const issueLevel = calc.issues.filter(issue => !calc.core.spells.issues.includes(issue))
-        .map(issue => Number(issue.match(/^(\d+)\s*级/)?.[1])).find(level => level <= state.levelCap);
-      return setLevel(issueLevel ?? state.level, true);
+        .map(issue => Number(issue.match(/^(\d+)\s*级/)?.[1])).find(level => level <= build.level);
+      return openChecklistEditor(task, '', '#level-detail', issueLevel ?? build.level);
     }
     if (task === 'ancestry') {
-      const language = state.languages.findIndex(value => !value);
-      const duplicate = state.languages.findIndex(value => state.backgroundLanguages.includes(value));
-      if (language < 0 && duplicate >= 0) return openTreeBranch('ancestry', `languages.${duplicate}`);
+      const language = build.languages.findIndex(value => !value);
+      const duplicate = build.languages.findIndex(value => build.backgroundLanguages.includes(value));
+      if (language < 0 && duplicate >= 0) return openBranch(`languages.${duplicate}`);
       const branch = calc.issues.includes('种族技能未选满') ? 'ancestrySkills' : language >= 0 ? `languages.${language}` : 'ancestry';
-      return openTreeBranch('ancestry', branch);
+      return openBranch(branch);
     }
     if (task === 'job') {
-      const unlock = activeTrack(state).sub[0];
-      if (state.level >= unlock && !calc.subclass) {
-        if (state.job === 'custom') return setLevel(unlock, true);
-        return openTreeBranch('job', state.job === 'rogue' ? 'subclass' : 'careerSubclass');
+      const unlock = activeTrack(build).sub[0];
+      if (build.level >= unlock && !calc.subclass) {
+        if (build.job === 'custom') return openChecklistEditor('treeLevel', '', '#level-detail', unlock);
+        return openBranch(build.job === 'rogue' ? 'subclass' : 'careerSubclass');
       }
-      return openTreeBranch('job', calc.issues.some(issue => /职业技能/.test(issue)) ? 'jobSkills' : 'job');
+      return openBranch(calc.issues.some(issue => /职业技能/.test(issue)) ? 'jobSkills' : 'job');
     }
     if (task === 'background') {
-      const skill = state.backgroundSkills.findIndex(value => !value);
-      const language = state.backgroundLanguages.findIndex(value => !value);
-      if (skill >= 0 && state.background === 'custom' && !state.backgroundName.trim()) return openTreeBranch('background');
-      if (skill >= 0) return openTreeBranch('background', `backgroundSkills.${skill}`);
-      if (language >= 0) return openTreeBranch('background', `backgroundLanguages.${language}`);
-      if (calc.issues.includes('背景工具尚未选择')) return openTreeBranch('background', 'backgroundTools');
-      const expertise = state.expertise.findIndex((value, i) => !calc.expertise.has(value) || state.expertise.indexOf(value) !== i);
-      if (state.job === 'rogue' && expertise >= 0) return openTreeBranch('background', `expertise.${expertise}`);
-      return openTreeBranch('background');
+      const skill = build.backgroundSkills.findIndex(value => !value);
+      const language = build.backgroundLanguages.findIndex(value => !value);
+      if (skill >= 0 && build.background === 'custom' && !build.backgroundName.trim()) return openBranch();
+      if (skill >= 0) return openBranch(`backgroundSkills.${skill}`);
+      if (language >= 0) return openBranch(`backgroundLanguages.${language}`);
+      if (calc.issues.includes('背景工具尚未选择')) return openBranch('backgroundTools');
+      const expertise = build.expertise.findIndex((value, i) => !calc.expertise.has(value) || build.expertise.indexOf(value) !== i);
+      if (build.job === 'rogue' && expertise >= 0) return openBranch(`expertise.${expertise}`);
+      return openBranch();
     }
-    if (state.equipmentMode === 'gold' && calc.issues.some(issue => /金币|起始财富/.test(issue))) {
-      openTreeBranch('armor', '');
-      return reveal('[data-key="wealthRoll"]', {focus: true});
+    if (build.equipmentMode === 'gold' && calc.issues.some(issue => /金币|起始财富/.test(issue))) {
+      return openChecklistEditor('armor', '', '[data-key="wealthRoll"]');
     }
-    if (calc.core.equipment.unlisted.length || calc.core.equipment.handConflict) return openTask('armor', '', '#equipment-worn-title');
-    return openTreeBranch('armor', missingEquipmentBranch() || 'armor');
+    if (calc.core.equipment.unlisted.length || calc.core.equipment.handConflict) {
+      return openChecklistEditor('armor', '', '#equipment-worn-title');
+    }
+    return openBranch(missingEquipmentBranch(build) || 'armor');
   }
 
   function handleWorkbenchClick(button, event) {
@@ -10849,7 +10862,8 @@ const CharacterLocale = (() => {
     }
     if (button.dataset.treeView) {treeView = button.dataset.treeView; render(); return true;}
     if (button.hasAttribute('data-issue')) {
-      const calc = calculate();
+      const build = checklistBuild();
+      const calc = calculate(build);
       const issue = [...new Set(calc.issues)][Number(button.dataset.issue)];
       if (!issue) return true;
       const level = Number(issue.match(/^(\d+)\s*级/)?.[1]);
@@ -10858,14 +10872,13 @@ const CharacterLocale = (() => {
         const key = extra ? 'decision.spell:' + extra.id : /准备/.test(issue) ? 'preparations' :
           /抄录/.test(issue) ? 'copiedSpells' : /子职法术替换/.test(issue) ? 'decision.bonus-swap-from:' + level :
           /法术替换|替换法术/.test(issue) ? 'plan.spellsRemoved' : 'plan.spellsAdded';
-        if (level && level !== state.level) setLevel(level, true, {task:'spells', key, target:'#branch-panel'});
-        else openTask('spells', key, '#branch-panel');
+        openChecklistEditor('spells', key, '#branch-panel', level || build.level);
         return true;
       }
-      if (level) {setLevel(level, true); return true;}
+      if (level) {openChecklistEditor('treeLevel', '', '#level-detail', level); return true;}
       const category = /专长|祈唤|战技|图腾|等级|法术来源/.test(issue) ? 'treeLevel' : /背景|专精|熟练来源/.test(issue) ? 'background' :
         /种族|语言|变体人类/.test(issue) ? 'ancestry' : /装备|护甲|盾牌|金币|财富|指定物品|武器|副手/.test(issue) ? 'armor' : 'job';
-      openBuildTask(category);
+      openBuildTask(category, build, calc);
       return true;
     }
     if (button.dataset.task) {
