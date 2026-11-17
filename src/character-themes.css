@@ -1,0 +1,141 @@
+/* Palettes supply the same values to the workbench and its miniature previews. */
+:root { color-scheme: light; }
+
+:root[data-workbench-theme="daylight"], [data-theme-preview="daylight"] {
+  --palette-paper: #f7fbff;
+  --palette-sidebar: #e9f3ff;
+  --palette-panel: #ffffff;
+  --palette-ink: #1c3048;
+  --palette-muted: #425970;
+  --palette-line: #b9cde1;
+  --palette-accent: #1c5c9e;
+  --palette-soft: #e4f1ff;
+  --palette-active: #15549b;
+  --palette-on-active: #ffffff;
+  --palette-portrait-deep: #162b47;
+  --palette-portrait-mid: #275e8e;
+  --palette-portrait-lit: #e2f4ff;
+}
+
+:root, [data-theme-preview="parchment"] {
+  --palette-paper: light-dark(#f7efe0, #252629);
+  --palette-sidebar: light-dark(#eae0cd, #303134);
+  --palette-panel: light-dark(#fff9ee, #2c2e31);
+  --palette-ink: light-dark(#2b2422, #ece8df);
+  --palette-muted: light-dark(#5d524a, #bec0bc);
+  --palette-line: light-dark(#cbbda8, #535453);
+  --palette-accent: light-dark(#7b2e34, #d6aa95);
+  --palette-soft: light-dark(#f1dfd5, #463832);
+  --palette-active: light-dark(#6d2b32, #b7c7c9);
+  --palette-on-active: light-dark(#fff8e9, #263237);
+  --palette-portrait-deep: #30282a;
+  --palette-portrait-mid: #61514a;
+  --palette-portrait-lit: #efd0ba;
+}
+
+:root[data-workbench-theme="nautical"], [data-theme-preview="nautical"] {
+  --palette-paper: light-dark(#edf0ef, #222b2e);
+  --palette-sidebar: light-dark(#e0e8e7, #2a373b);
+  --palette-panel: light-dark(#f6f8f6, #283337);
+  --palette-ink: light-dark(#23363d, #e4eceb);
+  --palette-muted: light-dark(#48616a, #b3c5c6);
+  --palette-line: light-dark(#bacdd0, #4d6973);
+  --palette-accent: light-dark(#805028, #edc595);
+  --palette-soft: light-dark(#f2e8d8, #423628);
+  --palette-active: light-dark(#345b63, #a0c8c8);
+  --palette-on-active: light-dark(#f7fcfc, #142f38);
+  --palette-portrait-deep: #102936;
+  --palette-portrait-mid: #2c5662;
+  --palette-portrait-lit: #a7e3e5;
+}
+
+:root[data-workbench-theme="woodland"], [data-theme-preview="woodland"] {
+  --palette-paper: light-dark(#f0f0e8, #252a23);
+  --palette-sidebar: light-dark(#e4e7db, #30392e);
+  --palette-panel: light-dark(#f7f8f1, #2c362b);
+  --palette-ink: light-dark(#253b31, #ecf2e4);
+  --palette-muted: light-dark(#4e6154, #b9c8b3);
+  --palette-line: light-dark(#c4cdb9, #5c6c55);
+  --palette-accent: light-dark(#775420, #e4cb93);
+  --palette-soft: light-dark(#f3e8d0, #423c28);
+  --palette-active: light-dark(#415e4c, #acc7a9);
+  --palette-on-active: light-dark(#f9fbf1, #203527);
+  --palette-portrait-deep: #1d3128;
+  --palette-portrait-mid: #4a6149;
+  --palette-portrait-lit: #c1dfac;
+}
+
+:root[data-workbench-theme="twilight"], [data-theme-preview="twilight"] {
+  --palette-paper: light-dark(#f1edf1, #282430);
+  --palette-sidebar: light-dark(#e8e0ea, #342c40);
+  --palette-panel: light-dark(#faf7f9, #342c3e);
+  --palette-ink: light-dark(#392b48, #f4eaf5);
+  --palette-muted: light-dark(#65556f, #c8b8cf);
+  --palette-line: light-dark(#cec1d7, #685a76);
+  --palette-accent: light-dark(#864466, #edb0cc);
+  --palette-soft: light-dark(#f0dfea, #4b3149);
+  --palette-active: light-dark(#604f70, #c6b4d8);
+  --palette-on-active: light-dark(#fdf8ff, #33213f);
+  --palette-portrait-deep: #2d2141;
+  --palette-portrait-mid: #634974;
+  --palette-portrait-lit: #e1bfee;
+}
+
+/* The cover color carries through to selection states and the portrait. */
+:root[data-workbench-theme^="binding-"], [data-theme-preview^="binding-"] {
+  --palette-paper: #f7efe1;
+  --palette-sidebar: #ebe2d1;
+  --palette-panel: #fffaf1;
+  --palette-ink: #29231f;
+  --palette-muted: #5e5144;
+  --palette-line: #c7b69a;
+  --palette-accent: #76511d;
+  --palette-soft: color-mix(in srgb, var(--binding-mid) 17%, var(--palette-panel));
+  --palette-active: var(--binding-ink);
+  --palette-on-active: #fff4dc;
+  --palette-portrait-deep: var(--binding-deep);
+  --palette-portrait-mid: var(--binding-mid);
+  --palette-portrait-lit: #f5d995;
+}
+:root[data-workbench-theme="binding-oxblood"], [data-theme-preview="binding-oxblood"] {
+  --binding-deep: #490e16;
+  --binding-mid: #986f73;
+  --binding-ink: #664149;
+  --binding-art: url("/* BINDING_OXBLOOD */");
+}
+:root[data-workbench-theme="binding-teal"], [data-theme-preview="binding-teal"] {
+  --binding-deep: #062b30;
+  --binding-mid: #698787;
+  --binding-ink: #35595b;
+  --binding-art: url("/* BINDING_TEAL */");
+}
+:root[data-workbench-theme="binding-forest"], [data-theme-preview="binding-forest"] {
+  --binding-deep: #142f1c;
+  --binding-mid: #78876e;
+  --binding-ink: #4a5b43;
+  --binding-art: url("/* BINDING_FOREST */");
+}
+:root[data-workbench-theme="binding-navy"], [data-theme-preview="binding-navy"] {
+  --binding-deep: #101c31;
+  --binding-mid: #72839a;
+  --binding-ink: #435570;
+  --binding-art: url("/* BINDING_NAVY */");
+}
+
+/* Shared roles consumed by forms, cards, selection states, and the HUD. */
+:root, .theme-sample {
+  --paper: var(--palette-paper);
+  --sidebar: var(--palette-sidebar);
+  --panel: var(--palette-panel);
+  --ink: var(--palette-ink);
+  --muted: var(--palette-muted);
+  --line: var(--palette-line);
+  --brass: var(--palette-accent);
+  --soft: var(--palette-soft);
+  --active: var(--palette-active);
+  --on-active: var(--palette-on-active);
+  --error: light-dark(#96394a, #ffadb7);
+  --portrait-deep: var(--palette-portrait-deep);
+  --portrait-mid: var(--palette-portrait-mid);
+  --portrait-lit: var(--palette-portrait-lit);
+}
